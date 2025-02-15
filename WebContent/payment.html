@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Payment Page</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>Payment Page</h1>
+
+<div class="cart-summary">
+    <h2>Shopping Cart Summary</h2>
+    <table class="cart-table">
+        <thead>
+        <tr>
+            <th>Movie Title</th>
+            <th>Quantity</th>
+            <th>Price Per Item</th>
+            <th>Total Price</th>
+        </tr>
+        </thead>
+        <tbody id="cart_table_body">
+        <!-- Cart items will be inserted here -->
+        </tbody>
+    </table>
+    <h3 id="totalPrice">Total in Cart: $0.00</h3>
+</div>
+
+<div class="payment-form">
+    <h2>Payment Information</h2>
+    <form id="paymentForm" method="POST" action="PurchaseServlet">
+        <label>
+            Credit Card Holder First Name:
+            <input type="text" name="firstName" required>
+        </label>
+        <label>
+            Credit Card Holder Last Name:
+            <input type="text" name="lastName" required>
+        </label>
+        <label>
+            Credit Card Number:
+            <input type="text" name="cardNumber" required>
+        </label>
+        <label>
+            Expiration Date (YYYY-MM):
+            <input type="text" name="expirationDate" placeholder="YYYY-MM-DD" required>
+        </label>
+        <button type="submit" class="submit">Place Order</button>
+    </form>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="payment.js"></script>
+</body>
+</html>

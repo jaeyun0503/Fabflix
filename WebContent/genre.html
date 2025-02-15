@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Genre</title>
+</head>
+<body>
+<h1>Genre Page</h1>
+
+<!-- Back to Movie List Page Button -->
+<a href="index.html" class="back-to-index-btn" style="margin-top: 20px;">Back to Movie List Page</a>
+<a href="cart.html" class="cart-btn" style="margin-top: 20px;">View Cart/Checkout</a>
+
+<div style="margin-top: 20px;">
+    <label for="resultsPerPage">Results per page:</label>
+    <select id="resultsPerPage">
+        <option value="10">10</option>
+        <option value="25" selected>25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+    </select>
+</div>
+
+<div style="margin-top: 20px;">
+    <label for="sortBy">Sort by:</label>
+    <select id="sortBy">
+        <option value="ratinghltitlelh" selected>Rating (high to low) Title (A-Z)</option>
+        <option value="ratinghltitlehl">Rating (high to low) Title (Z-A)</option>
+        <option value="ratinglhtitlelh">Rating (low to high) Title (A-Z)</option>
+        <option value="ratinglhtitlehl">Rating (low to high) Title (Z-A)</option>
+        <option value="titlelhratinghl">Title (A-Z) Rating (high to low)</option>
+        <option value="titlelhratinglh">Title (A-Z) Rating (low to high)</option>
+        <option value="titlehlratinghl">Title (Z-A) Rating (high to low)</option>
+        <option value="titlehlratinglh">Title (Z-A) rating (low to high)</option>
+    </select>
+</div>
+
+<h3 id="movielist_info"></h3>
+<table id=movie_table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Year</th>
+        <th>Director</th>
+        <th>Rating</th>
+        <th>Genres</th>
+        <th>Stars</th>
+    </tr>
+    </thead>
+
+    <tbody id=movielist_table_body></tbody>
+</table>
+
+<div id="pagination" style="margin-top: 20px;">
+    <button id="prevPage">Previous</button>
+    <span id="pageInfo"></span>
+    <button id="nextPage">Next</button>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="genre.js"></script>
+</body>
+</html>
