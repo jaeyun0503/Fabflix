@@ -33,15 +33,16 @@ public class EmployeeLoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession(false);
 
-        if (session != null && session.getAttribute("user") != null) {
+        if (session != null) {
             // User is logged in, redirect to the dashboard page
             Object userObject = session.getAttribute("user");
             if (userObject instanceof Employee) {
                 response.sendRedirect("metadata.html");
+                return;
             }
             else {
                 // No user is logged in, redirect to the login page
-                response.sendRedirect("private-login.html");
+                response.sendRedirect("employee-login.html");
             }
         }
     }

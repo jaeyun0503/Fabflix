@@ -187,3 +187,13 @@ h2 {
     font-weight: bold;
     text-align: center;
 }
+
+.metadata-container {
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.metadata-container * {
+    user-select: text;
+}

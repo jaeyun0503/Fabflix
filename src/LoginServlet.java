@@ -41,10 +41,8 @@ public class LoginServlet extends HttpServlet {
             statement.setString(1, username);
 
             ResultSet rs = statement.executeQuery();
-            System.out.println(username + password);
             if (rs.next()) {
-                System.out.println(123);
-                if (VerifyPassword.validPassword(username, password, "user")) {
+                if (VerifyPassword.validPassword(username, password, "customer")) {
                     User user = new User(username);
                     String id = rs.getString("id");
                     user.setId(Integer.parseInt(id));
