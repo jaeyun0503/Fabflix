@@ -38,6 +38,7 @@ CREATE PROCEDURE add_movie(
     IN star_name VARCHAR(100),
     IN star_birth_year INTEGER,
     IN genre_name VARCHAR(32),
+    IN movie_price DECIMAL(5,2),
     OUT status VARCHAR(1000)
 )
 BEGIN
@@ -53,7 +54,6 @@ BEGIN
     DECLARE max_genre_id INT;
     DECLARE genre_exists_in_movie INT;
     DECLARE genre_id INT;
-    DECLARE new_price INT;
 
     -- Check if movie exists
     SELECT COUNT(*) INTO movie_exists FROM movies m WHERE m.title = title AND m.year = year AND m.director = director;
@@ -117,7 +117,7 @@ BEGIN
         SET max_movie_id = max_movie_id + 1;
         -- new movie ID
         SET new_movie_id = CONCAT('tt', LPAD(max_movie_id, 7, '0'));
-        INSERT INTO movies (id, title, year, director) VALUES (new_movie_id, title, year, director);
+        INSERT INTO movies (id, title, year, director, price) VALUES (new_movie_id, title, year, director, movie_price);
         SELECT id INTO star_id FROM stars WHERE name = star_name LIMIT 1;
 
         IF star_id IS NULL THEN
@@ -144,10 +144,7 @@ BEGIN
 
         INSERT INTO genres_in_movies (genreId, movieId) VALUES (genre_id, new_movie_id);
 
-        SET new_price = FLOOR(1 + RAND() * 100);
-        INSERT INTO movie_prices (movieId, price) VALUES (new_movie_id, new_price);
-
-        SET status = CONCAT('Success! Movie ID: ', new_movie_id, ', Star ID: ', star_id, ', Genre ID: ', genre_id, ', Price: ', new_price);
+        SET status = CONCAT('Success! Movie ID: ', new_movie_id, ', Star ID: ', star_id, ', Genre ID: ', genre_id, ', Price: ', movie_price);
 
     END IF;
 
