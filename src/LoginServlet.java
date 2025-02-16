@@ -36,23 +36,30 @@ public class LoginServlet extends HttpServlet {
         JsonObject responseJsonObject = new JsonObject();
 
         try (Connection conn = dataSource.getConnection()) {
-            String query = "SELECT id FROM customers WHERE email = ? AND password = ?";
+            String query = "SELECT * FROM customers WHERE email = ?";
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, username);
-            statement.setString(2, password);
 
             ResultSet rs = statement.executeQuery();
-
+            System.out.println(username + password);
             if (rs.next()) {
-                User user = new User(username);
-                String id = rs.getString("id");
-                user.setId(Integer.parseInt(id));
-                request.getSession().setAttribute("user", user);
-                responseJsonObject.addProperty("status", "success");
-                responseJsonObject.addProperty("message", "success");
+                System.out.println(123);
+                if (VerifyPassword.validPassword(username, password)) {
+                    User user = new User(username);
+                    String id = rs.getString("id");
+                    user.setId(Integer.parseInt(id));
+                    request.getSession().setAttribute("user", user);
+                    responseJsonObject.addProperty("status", "success");
+                    responseJsonObject.addProperty("message", "success");
+                } else {
+                    responseJsonObject.addProperty("status", "fail");
+                    request.getServletContext().log("Login failed");
+                    responseJsonObject.addProperty("message", "Incorrect Password. Please try again.");
+
+                }
             } else {
                 responseJsonObject.addProperty("status", "fail");
-                responseJsonObject.addProperty("message", "incorrect username or password");
+                responseJsonObject.addProperty("message", "The username does not exist. Please try again");
             }
             rs.close();
             statement.close();
@@ -60,6 +67,7 @@ public class LoginServlet extends HttpServlet {
             responseJsonObject.addProperty("status", "error");
             responseJsonObject.addProperty("message", "Internal Server Error");
             e.printStackTrace();
+            response.setStatus(500);
         }
 
         String jsonResponse = responseJsonObject.toString();
