@@ -30,6 +30,14 @@ function submitLoginForm(formSubmitEvent) {
      */
     formSubmitEvent.preventDefault();
 
+    var recaptchaResponse = grecaptcha.getResponse();
+
+    if (!recaptchaResponse) {
+        console.log("Empty reCAPTCHA response");
+        alert("Please complete the reCAPTCHA.")
+        return;
+    }
+
     $.ajax(
         "api/login", {
             method: "POST",

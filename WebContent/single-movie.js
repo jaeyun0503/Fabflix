@@ -51,8 +51,6 @@ function handleResult(resultData) {
     movieInfoElement.append(`<h3>Release Year: ${movie.movie_year}</h3>`);
     movieInfoElement.append(`<h3>Director: ${movie.movie_director}</h3>`);
 
-
-
     let genresArray = movie["movie_genres"]["genres"] || [];
     let genresHTML = "";
 
