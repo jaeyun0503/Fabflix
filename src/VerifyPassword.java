@@ -16,16 +16,16 @@ public class VerifyPassword {
 	 */
 	public static void main(String[] args) throws Exception {
 
-		System.out.println(verifyCredentials("a@email.com", "a2"));
-		System.out.println(verifyCredentials("a@email.com", "a3"));
+		System.out.println(verifyCredentials("a@email.com", "a2", "user"));
+		System.out.println(verifyCredentials("a@email.com", "a3", "user"));
 
 	}
 
-	public static boolean validPassword(String email, String password) throws Exception {
-		return verifyCredentials(email, password);
+	public static boolean validPassword(String email, String password, String type) throws Exception {
+		return verifyCredentials(email, password, type);
 	}
 
-	private static boolean verifyCredentials(String email, String password) throws Exception {
+	private static boolean verifyCredentials(String email, String password, String type) throws Exception {
 		
 		String loginUser = "mytestuser";
 		String loginPasswd = "My6$Password";
@@ -34,7 +34,14 @@ public class VerifyPassword {
 		Class.forName("com.mysql.cj.jdbc.Driver");
 		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 		PreparedStatement statement;
-		String query = "SELECT * from customers where email = ?";
+		String query = "";
+
+		if (type.equals("customer")) {
+			query = "SELECT * from customers where email= ?";
+		}
+		else if (type.equals("employee")) {
+			query = "SELECT * from employees where email= ?";
+		}
 		statement = connection.prepareStatement(query);
 		statement.setString(1, email);
 
