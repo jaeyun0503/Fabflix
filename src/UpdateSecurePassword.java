@@ -21,14 +21,18 @@ public class UpdateSecurePassword {
 
         String loginUser = "mytestuser";
         String loginPasswd = "My6$Password";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+        String loginUrl = "jdbc:mysql://localhost:3306/testdb";
 
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 
         updateCustomers(connection);
         updateEmployees(connection);
+        connection.close();
+
+        System.out.println("finished");
     }
+
 
     private static void updateCustomers(Connection connection) throws SQLException {
 
@@ -74,11 +78,6 @@ public class UpdateSecurePassword {
             count += updateResult;
         }
         System.out.println("updating password completed, " + count + " rows affected");
-
-        statement.close();
-        connection.close();
-
-        System.out.println("finished");
 
     }
     private static void updateEmployees(Connection connection) throws SQLException {

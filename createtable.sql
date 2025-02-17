@@ -1,12 +1,11 @@
-CREATE DATABASE IF NOT EXISTS moviedb;
-USE moviedb;
+CREATE DATABASE IF NOT EXISTS testdb;
+USE testdb;
 
 CREATE TABLE IF NOT EXISTS movies (
 	id VARCHAR(10) NOT NULL,
     title VARCHAR(100) NOT NULL,
     year INTEGER NOT NULL,
     director VARCHAR(100) NOT NULL,
-    price DECIMAL(5,2),
     PRIMARY KEY (id)
 );
 
@@ -64,7 +63,6 @@ CREATE TABLE IF NOT EXISTS sales (
     customerId INTEGER NOT NULL,
     movieId VARCHAR(10) NOT NULL,
     saleDate DATE NOT NULL,
-    quantity INT,
     PRIMARY KEY (id),
     FOREIGN KEY (customerId) REFERENCES customers(id),
     FOREIGN KEY (movieId) REFERENCES movies(id)
@@ -86,8 +84,3 @@ CREATE TABLE IF NOT EXISTS employees (
 
 INSERT INTO employees VALUES ("classta@email.edu", "classta", "TA CS122B");
 
-SET SQL_SAFE_UPDATES = 0;
-
-UPDATE movies
-SET price = ROUND(1 + (RAND() * 19), 2);
-SET SQL_SAFE_UPDATES = 1;
