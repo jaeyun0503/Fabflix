@@ -147,46 +147,61 @@ public class MovieListServlet extends HttpServlet {
             order = "ORDER BY m.title DESC, rating ASC ";
         }
         try (Connection conn = dataSource.getConnection()) {
-            String query =
-                    "SELECT DISTINCT m.id, m.title, m.year, m.director, COALESCE(r.rating, 0) AS rating, m.price " +
-                            "FROM movies AS m LEFT JOIN ratings r ON m.id = r.movieId " +
+            StringBuilder query = new StringBuilder(
+                    "SELECT SQL_CALC_FOUND_ROWS DISTINCT m.id, m.title, m.year, m.director, COALESCE(r.rating, 0) AS rating, m.price " +
+                            "FROM movies AS m " +
+                            "LEFT JOIN ratings r ON m.id = r.movieId " +
                             "LEFT JOIN stars_in_movies sim ON m.id = sim.movieId " +
                             "LEFT JOIN stars s on sim.starId = s.id " +
-                            "WHERE 1=1 ";   // Set to 0 if rating is null
+                            "WHERE true ");   // Set to 0 if rating is null
 
-
+            String temp = "";
+            int k = title.length() < 3 ? 0 : title.length() < 4 ? 1 : title.length() < 7 ? 2 : 3;
             if (title != null && !title.trim().isEmpty()) {
-                query += "AND m.title LIKE ? ";
+                String [] tokens = title.split(" ");
+                for (String word : tokens) {
+                    temp += "+" + word + "* ";
+                }
+                query.append(" AND (MATCH (m.title) AGAINST (? IN BOOLEAN MODE) ");
+                query.append("OR ed(lower(title), '").append(title.toLowerCase()).append("') <= ");
+                query.append(k);
+                query.append(") ");
+            } else {
+                temp = "%";
+                query.append(" AND m.title (LIKE ? OR ed(lower(title), '");
+                query.append(title.toLowerCase()).append("') <= ");
+                query.append(k);
+                query.append(") ");
             }
+
             if (year != null && !year.trim().isEmpty()) {
-                query += "AND m.year = ? ";
+                query.append(" AND m.year = ? ");
             }
             if (director != null && !director.trim().isEmpty()) {
-                query += "AND m.director LIKE ? ";
+                query.append("AND m.director LIKE ? ");
             }
             if (star != null && !star.trim().isEmpty()) {
-                query += "AND s.name LIKE ? ";
+                query.append("AND s.name LIKE ? ");
             }
             if (genre != null && !genre.trim().isEmpty()) {
-                query += "AND m.id IN (SELECT mg.movieId FROM genres_in_movies mg " +
-                        "JOIN genres g ON mg.genreId = g.id WHERE g.name = ?) ";
+                query.append("AND m.id IN (SELECT mg.movieId FROM genres_in_movies mg " +
+                        "JOIN genres g ON mg.genreId = g.id WHERE g.name = ?) ");
             }
             if (letter != null && !letter.trim().isEmpty()) {
                 if (letter.equals("*")) {
-                    query += "AND m.title REGEXP '^[^A-Za-z0-9]' ";
+                    query.append("AND m.title REGEXP '^[^A-Za-z0-9]' ");
                 } else {
-                    query += "AND LOWER(m.title) LIKE ? ";
+                    query.append("AND LOWER(m.title) LIKE ? ");
                 }
             }
 
-            query += order +
-                    "LIMIT ? OFFSET ?";
+            query.append(order + "LIMIT ? OFFSET ?");
 
-            PreparedStatement statement = conn.prepareStatement(query);
+            PreparedStatement statement = conn.prepareStatement(query.toString());
             int pos = 1;
 
             if (title != null && !title.isEmpty())
-                statement.setString(pos++, "%" + title + "%");
+                statement.setString(pos++, temp);
 
             if (year != null && !year.isEmpty())
                 try {
@@ -249,63 +264,67 @@ public class MovieListServlet extends HttpServlet {
                 movieObj.add("movie_genres", genres);
             }
 
-            String countQuery =
-                    "SELECT COUNT(DISTINCT m.id) as total_count " +
-                            "FROM movies m " +
-                            "LEFT JOIN ratings r ON m.id = r.movieId " +
-                            "LEFT JOIN stars_in_movies sim ON m.id = sim.movieId " +
-                            "LEFT JOIN stars s ON sim.starId = s.id " +
-                            "WHERE 1=1 ";
-
-            if (title != null && !title.trim().isEmpty()) {
-                countQuery += "AND m.title LIKE ? ";
-            }
-            if (year != null && !year.trim().isEmpty()) {
-                countQuery += "AND m.year = ? ";
-            }
-            if (director != null && !director.trim().isEmpty()) {
-                countQuery += "AND m.director LIKE ? ";
-            }
-            if (star != null && !star.trim().isEmpty()) {
-                countQuery += "AND s.name LIKE ? ";
-            }
-            if (genre != null && !genre.trim().isEmpty()) {
-                countQuery += "AND m.id IN (SELECT mg.movieId FROM genres_in_movies mg " +
-                        "JOIN genres g ON mg.genreId = g.id WHERE g.name = ?) ";
-            }
-            if (letter != null && !letter.trim().isEmpty()) {
-                if (letter.equals("*")) {
-                    countQuery += "AND m.title REGEXP '^[^A-Za-z0-9]' ";
-                } else {
-                    countQuery += "AND LOWER(m.title) LIKE ? ";
-                }
-            }
-
+            String countQuery = "SELECT FOUND_ROWS() AS total_count";
             PreparedStatement countStmt = conn.prepareStatement(countQuery);
-            pos = 1;
-            if (title != null && !title.trim().isEmpty()) {
-                countStmt.setString(pos++, "%" + title.trim() + "%");
-            }
-            if (year != null && !year.trim().isEmpty()) {
-                try {
-                    countStmt.setInt(pos++, Integer.parseInt(year.trim()));
-                } catch (NumberFormatException e) {
-                    countStmt.setInt(pos++, 0);
-                }
-            }
-            if (director != null && !director.trim().isEmpty()) {
-                countStmt.setString(pos++, "%" + director.trim() + "%");
-            }
-            if (star != null && !star.trim().isEmpty()) {
-                countStmt.setString(pos++, "%" + star.trim() + "%");
-            }
-            if (genre != null && !genre.trim().isEmpty()) {
-                countStmt.setString(pos++, genre.trim());
-            }
-            if (letter != null && !letter.trim().isEmpty() && !letter.equals("*")) {
-                countStmt.setString(pos++, letter.toLowerCase() + "%");
-            }
 
+//
+//            String countQuery =
+//                    "SELECT COUNT(DISTINCT m.id) as total_count " +
+//                            "FROM movies m " +
+//                            "LEFT JOIN ratings r ON m.id = r.movieId " +
+//                            "LEFT JOIN stars_in_movies sim ON m.id = sim.movieId " +
+//                            "LEFT JOIN stars s ON sim.starId = s.id " +
+//                            "WHERE 1=1 ";
+//
+//            if (title != null && !title.trim().isEmpty()) {
+//                countQuery += "AND m.title LIKE ? ";
+//            }
+//            if (year != null && !year.trim().isEmpty()) {
+//                countQuery += "AND m.year = ? ";
+//            }
+//            if (director != null && !director.trim().isEmpty()) {
+//                countQuery += "AND m.director LIKE ? ";
+//            }
+//            if (star != null && !star.trim().isEmpty()) {
+//                countQuery += "AND s.name LIKE ? ";
+//            }
+//            if (genre != null && !genre.trim().isEmpty()) {
+//                countQuery += "AND m.id IN (SELECT mg.movieId FROM genres_in_movies mg " +
+//                        "JOIN genres g ON mg.genreId = g.id WHERE g.name = ?) ";
+//            }
+//            if (letter != null && !letter.trim().isEmpty()) {
+//                if (letter.equals("*")) {
+//                    countQuery += "AND m.title REGEXP '^[^A-Za-z0-9]' ";
+//                } else {
+//                    countQuery += "AND LOWER(m.title) LIKE ? ";
+//                }
+//            }
+//
+//            PreparedStatement countStmt = conn.prepareStatement(countQuery);
+//            pos = 1;
+//            if (title != null && !title.trim().isEmpty()) {
+//                countStmt.setString(pos++, "%" + title.trim() + "%");
+//            }
+//            if (year != null && !year.trim().isEmpty()) {
+//                try {
+//                    countStmt.setInt(pos++, Integer.parseInt(year.trim()));
+//                } catch (NumberFormatException e) {
+//                    countStmt.setInt(pos++, 0);
+//                }
+//            }
+//            if (director != null && !director.trim().isEmpty()) {
+//                countStmt.setString(pos++, "%" + director.trim() + "%");
+//            }
+//            if (star != null && !star.trim().isEmpty()) {
+//                countStmt.setString(pos++, "%" + star.trim() + "%");
+//            }
+//            if (genre != null && !genre.trim().isEmpty()) {
+//                countStmt.setString(pos++, genre.trim());
+//            }
+//            if (letter != null && !letter.trim().isEmpty() && !letter.equals("*")) {
+//                countStmt.setString(pos++, letter.toLowerCase() + "%");
+//            }
+//
             ResultSet countRs = countStmt.executeQuery();
             int totalMovies = 0;
             if (countRs.next()) {
