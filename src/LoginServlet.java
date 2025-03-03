@@ -19,7 +19,7 @@ public class LoginServlet extends HttpServlet {
 
     public void init() {
         try {
-            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/moviedb");
+            dataSource = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/ReadOnly");
         } catch (NamingException e) {
             e.printStackTrace();
         }
