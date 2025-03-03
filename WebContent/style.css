@@ -17,8 +17,29 @@ h1 {
     font-size: 24px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
+.control-panel {
+    width: 90%;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
-/* Button Styling */
+
+.results-sort {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#search_form_container {
+    margin-bottom: 20px;
+}
+
+#browse_genre_container {
+    margin: 30px 0;
+}
+
 .back-to-index-btn {
     position: fixed;
     top: 10px;
@@ -58,7 +79,7 @@ h1 {
 }
 
 
-/* Table Styling */
+
 .table {
     width: 90%;
     margin: 20px auto;
@@ -196,4 +217,29 @@ h2 {
 
 .metadata-container * {
     user-select: text;
+}
+
+#pagination {
+    width: 90%;
+    margin: 20px auto;
+    text-align: center;
+}
+
+
+.autocomplete-suggestions {
+    background-color: #fff !important;
+    border: 1px solid #ccc !important;
+    max-height: 200px;
+    overflow-y: auto;
+    position: absolute;
+    z-index: 9999;
+}
+
+.autocomplete-suggestion {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.autocomplete-suggestion:hover {
+    background-color: #f2f2f2;
 }

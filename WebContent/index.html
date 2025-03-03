@@ -26,65 +26,80 @@
 
 <h1>Movie List Page</h1>
 <a href="cart.html" class="cart-btn" style="margin-top: 20px;">View Cart/Checkout</a>
-<div style="margin-top: 20px;">
-    <label for="resultsPerPage">Results per page:</label>
-    <select id="resultsPerPage">
-        <option value="10">10</option>
-        <option value="25" selected>25</option>
-        <option value="50">50</option>
-        <option value="100">100</option>
-    </select>
+
+<div class="control-panel">
+    <div class="results-sort">
+        <label for="resultsPerPage">Results per page:</label>
+        <select id="resultsPerPage">
+            <option value="10">10</option>
+            <option value="25" selected>25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </select>
+
+        <label for="sortBy">Sort by:</label>
+        <select id="sortBy">
+            <option value="ratinghltitlelh" selected>Rating (high to low) Title (A-Z)</option>
+            <option value="ratinghltitlehl">Rating (high to low) Title (Z-A)</option>
+            <option value="ratinglhtitlelh">Rating (low to high) Title (A-Z)</option>
+            <option value="ratinglhtitlehl">Rating (low to high) Title (Z-A)</option>
+            <option value="titlelhratinghl">Title (A-Z) Rating (high to low)</option>
+            <option value="titlelhratinglh">Title (A-Z) Rating (low to high)</option>
+            <option value="titlehlratinghl">Title (Z-A) Rating (high to low)</option>
+            <option value="titlehlratinglh">Title (Z-A) rating (low to high)</option>
+        </select>
+    </div>
+
+    <!-- Search Form Container -->
+    <div id="search_form_container">
+        <form id="search_form">
+            <label>Title:
+                <input type="text" name="title" id="autocomplete"
+                       class="autocomplete-searchbox form-control mr-sm-2 col-sm-2 offset-sm-3">
+            </label>
+            <label>Year:
+                <input type="text" name="year">
+            </label>
+            <label>Director:
+                <input type="text" name="director">
+            </label>
+            <label>Star:
+                <input type="text" name="star">
+            </label>
+            <input type="submit" value="Search">
+        </form>
+    </div>
 </div>
 
-<div style="margin-top: 20px;">
-    <label for="sortBy">Sort by:</label>
-    <select id="sortBy">
-        <option value="ratinghltitlelh" selected>Rating (high to low) Title (A-Z)</option>
-        <option value="ratinghltitlehl">Rating (high to low) Title (Z-A)</option>
-        <option value="ratinglhtitlelh">Rating (low to high) Title (A-Z)</option>
-        <option value="ratinglhtitlehl">Rating (low to high) Title (Z-A)</option>
-        <option value="titlelhratinghl">Title (A-Z) Rating (high to low)</option>
-        <option value="titlelhratinglh">Title (A-Z) Rating (low to high)</option>
-        <option value="titlehlratinghl">Title (Z-A) Rating (high to low)</option>
-        <option value="titlehlratinglh">Title (Z-A) rating (low to high)</option>
-
-    </select>
+<div id="browse_genre_container">
+    <h3>Browse by Genre:</h3>
+    <ul>
+        <li><a href="genre.html?id=1">Action</a></li>
+        <li><a href="genre.html?id=2">Adult</a></li>
+        <li><a href="genre.html?id=3">Adventure</a></li>
+        <li><a href="genre.html?id=4">Animation</a></li>
+        <li><a href="genre.html?id=5">Biography</a></li>
+        <li><a href="genre.html?id=6">Comedy</a></li>
+        <li><a href="genre.html?id=7">Crime</a></li>
+        <li><a href="genre.html?id=8">Documentary</a></li>
+        <li><a href="genre.html?id=9">Drama</a></li>
+        <li><a href="genre.html?id=10">Family</a></li>
+        <li><a href="genre.html?id=11">Fantasy</a></li>
+        <li><a href="genre.html?id=12">History</a></li>
+        <li><a href="genre.html?id=13">Horror</a></li>
+        <li><a href="genre.html?id=14">Music</a></li>
+        <li><a href="genre.html?id=15">Musical</a></li>
+        <li><a href="genre.html?id=16">Mystery</a></li>
+        <li><a href="genre.html?id=17">Reality-TV</a></li>
+        <li><a href="genre.html?id=18">Romance</a></li>
+        <li><a href="genre.html?id=19">Sci-fi</a></li>
+        <li><a href="genre.html?id=20">Sport</a></li>
+        <li><a href="genre.html?id=21">Thriller</a></li>
+        <li><a href="genre.html?id=22">War</a></li>
+        <li><a href="genre.html?id=23">Western</a></li>
+    </ul>
 </div>
 
-<form id="search_form">
-    <label>Title: <input type="text" name="title" id="autocomplete" class="autocomplete-searchbox form-control mr-sm-2 col-sm-2 offset-sm-3" style="border-color: #756AB6;"></label>
-    <label>Year: <input type="text" name="year"></label>
-    <label>Director: <input type="text" name="director"></label>
-    <label>Star: <input type="text" name="star"></label>
-    <input type="submit" value="Search">
-</form>
-
-<h3>Browse by Genre:</h3>
-<ul>
-    <li><a href="genre.html?id=1">Action</a></li>
-    <li><a href="genre.html?id=2">Adult</a></li>
-    <li><a href="genre.html?id=3">Adventure</a></li>
-    <li><a href="genre.html?id=4">Animation</a></li>
-    <li><a href="genre.html?id=5">Biography</a></li>
-    <li><a href="genre.html?id=6">Comedy</a></li>
-    <li><a href="genre.html?id=7">Crime</a></li>
-    <li><a href="genre.html?id=8">Documentary</a></li>
-    <li><a href="genre.html?id=9">Drama</a></li>
-    <li><a href="genre.html?id=10">Family</a></li>
-    <li><a href="genre.html?id=11">Fantasy</a></li>
-    <li><a href="genre.html?id=12">History</a></li>
-    <li><a href="genre.html?id=13">Horror</a></li>
-    <li><a href="genre.html?id=14">Music</a></li>
-    <li><a href="genre.html?id=15">Musical</a></li>
-    <li><a href="genre.html?id=16">Mystery</a></li>
-    <li><a href="genre.html?id=17">Reality-TV</a></li>
-    <li><a href="genre.html?id=18">Romance</a></li>
-    <li><a href="genre.html?id=19">Sci-fi</a></li>
-    <li><a href="genre.html?id=20">Sport</a></li>
-    <li><a href="genre.html?id=21">Thriller</a></li>
-    <li><a href="genre.html?id=22">War</a></li>
-    <li><a href="genre.html?id=23">Western</a></li>
-</ul>
 
 <h3>Browse by Title:</h3>
 <div>
@@ -98,7 +113,6 @@
     <a href="index.html?letter=7">7</a>
     <a href="index.html?letter=8">8</a>
     <a href="index.html?letter=9">9</a>
-
     <a href="index.html?letter=A">A</a>
     <a href="index.html?letter=B">B</a>
     <a href="index.html?letter=C">C</a>
