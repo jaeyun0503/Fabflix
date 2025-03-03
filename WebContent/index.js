@@ -32,6 +32,54 @@ function getParameterByName(target) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+function handleLookup(query, doneCallback) {
+    if (query.length < 3) return;
+
+    console.log("autocomplete initiated")
+    console.log("sending AJAX request to backend Java Servlet")
+    const data = localStorage.getItem(query)
+
+    if (data) {
+        console.log("cached results found in local storage")
+        handleLookupAjaxSuccess(JSON.parse(data), query, doneCallback)
+        return;
+    }
+
+    // sending the HTTP GET request to the Java Servlet endpoint hero-suggestion
+    // with the query data
+    jQuery.ajax({
+        method: "GET",
+        // generate the request url from the query.
+        // escape the query string to avoid errors caused by special characters
+        url: "api/autocomplete?query=" + escape(query),
+        success: function(data) {
+            // pass the data, query, and doneCallback function into the success handler
+            handleLookupAjaxSuccess(data, query, doneCallback)
+        },
+        error: function(errorData) {
+            console.log("lookup ajax error")
+            console.log(errorData)
+        }
+    })
+}
+
+
+function handleLookupAjaxSuccess(data, query, doneCallback) {
+    console.log("lookup ajax successful")
+
+    // parse the string into JSON
+    var jsonData = $.parseJSON(JSON.stringify(data));
+    console.log(jsonData)
+
+    localStorage.setItem(query, JSON.stringify(data))
+
+    // call the callback function provided by the autocomplete library
+    // add "{suggestions: jsonData}" to satisfy the library response format according to
+    //   the "Response Format" section in documentation
+    doneCallback( { suggestions: jsonData } );
+}
+
+
 /**
  * Handles the data returned by the API, read the jsonObject and populate data into html elements
  * @param resultData jsonObject
@@ -116,6 +164,16 @@ function handleResult(resultData) {
     }
 }
 
+
+function handleSelectSuggestion(suggestion) {
+    console.log("you select " + suggestion["value"] + " with ID " + suggestion["data"]["id"])
+    window.location.href = `single-movie.html?id=${suggestion["data"]["id"]}`
+}
+
+
+function handleNormalSearch(query) {
+    console.log("doing normal search with query: " + query);
+}
 
 /**
  * Once this .js is loaded, following scripts will be executed by the browser\
@@ -206,6 +264,25 @@ jQuery(document).ready(() => {
         history.pushState(null, "", newQuery);
         fetchData(1);
     });
+
+    if ($('#autocomplete').length) {
+        $('#autocomplete').autocomplete({
+            lookup: function(query, doneCallback) {
+                handleLookup(query, doneCallback);
+            },
+            onSelect: function(suggestion) {
+                handleSelectSuggestion(suggestion);
+            },
+            deferRequestBy: 300 // Set a slight delay for performance
+        });
+
+        $('#autocomplete').keypress(function(event) {
+            if (event.keyCode == 13) { // enter key
+                handleNormalSearch($('#autocomplete').val());
+            }
+        });
+    }
+
 });
 
 $(document).on('click', '.add-to-cart', function() {

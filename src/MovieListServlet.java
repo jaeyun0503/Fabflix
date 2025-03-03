@@ -41,6 +41,7 @@ public class MovieListServlet extends HttpServlet {
         response.setContentType("application/json"); // Response mime type
 
         String title = request.getParameter("title");
+        if (title == null) {title = "";}
         String year = request.getParameter("year");
         String director = request.getParameter("director");
         String star = request.getParameter("star");
@@ -117,6 +118,7 @@ public class MovieListServlet extends HttpServlet {
         session.setAttribute("user", user);
 
         title = user.getTitle();
+        if (title == null) {title = "";}
         year = user.getYear();
         director = user.getDirector();
         star = user.getStar();
@@ -139,11 +141,11 @@ public class MovieListServlet extends HttpServlet {
             order = "ORDER BY rating ASC, m.title ASC ";
         } else if ("ratinglhtitlehl".equalsIgnoreCase(sortBy)) {
             order = "ORDER BY rating ASC, m.title DESC ";
-        }else if ("ratinghltitlehl".equalsIgnoreCase(sortBy)) {
+        } else if ("ratinghltitlehl".equalsIgnoreCase(sortBy)) {
             order = "ORDER BY rating DESC, m.title DESC ";
-        }else if ("titlelhratinglh".equalsIgnoreCase(sortBy)) {
+        } else if ("titlelhratinglh".equalsIgnoreCase(sortBy)) {
             order = "ORDER BY m.title ASC, rating ASC ";
-        }else if ("titlehlratinglh".equalsIgnoreCase(sortBy)) {
+        } else if ("titlehlratinglh".equalsIgnoreCase(sortBy)) {
             order = "ORDER BY m.title DESC, rating ASC ";
         }
         try (Connection conn = dataSource.getConnection()) {
@@ -168,7 +170,7 @@ public class MovieListServlet extends HttpServlet {
                 query.append(") ");
             } else {
                 temp = "%";
-                query.append(" AND m.title (LIKE ? OR ed(lower(title), '");
+                query.append(" AND (m.title LIKE ? OR ed(lower(title), '");
                 query.append(title.toLowerCase()).append("') <= ");
                 query.append(k);
                 query.append(") ");
@@ -200,8 +202,8 @@ public class MovieListServlet extends HttpServlet {
             PreparedStatement statement = conn.prepareStatement(query.toString());
             int pos = 1;
 
-            if (title != null && !title.isEmpty())
-                statement.setString(pos++, temp);
+//            if (title != null && !title.isEmpty())
+            statement.setString(pos++, temp);
 
             if (year != null && !year.isEmpty())
                 try {
@@ -347,6 +349,7 @@ public class MovieListServlet extends HttpServlet {
 
         } catch (Exception e) {
             // Write error message JSON object to output
+            e.printStackTrace();
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", e.getMessage());
             out.write(jsonObject.toString());
