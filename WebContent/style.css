@@ -235,6 +235,10 @@ h2 {
     z-index: 9999;
 }
 
+.autocomplete-selected {
+    background: #F0F0F0;
+}
+
 .autocomplete-suggestion {
     padding: 8px;
     cursor: pointer;
