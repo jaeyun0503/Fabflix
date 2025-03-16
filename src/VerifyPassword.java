@@ -1,5 +1,8 @@
 import org.jasypt.util.password.StrongPasswordEncryptor;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
 import java.sql.*;
 
 public class VerifyPassword {
@@ -26,43 +29,37 @@ public class VerifyPassword {
 	}
 
 	private static boolean verifyCredentials(String email, String password, String type) throws Exception {
-		
-		String loginUser = "mytestuser";
-		String loginPasswd = "My6$Password";
-		String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+		Context initContext = new InitialContext();
+		DataSource ds = (DataSource) initContext.lookup("java:comp/env/jdbc/ReadOnly");
 
-		Class.forName("com.mysql.cj.jdbc.Driver");
-		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-		PreparedStatement statement;
-		String query = "";
+		try (Connection connection = ds.getConnection()) {
+			String query;
+			if ("customer".equalsIgnoreCase(type)) {
+				query = "SELECT * FROM customers WHERE email = ?";
+			} else if ("employee".equalsIgnoreCase(type)) {
+				query = "SELECT * FROM employees WHERE email = ?";
+			} else {
+				query = "SELECT * FROM customers WHERE email = ?";
+			}
 
-		if (type.equals("customer")) {
-			query = "SELECT * from customers where email= ?";
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setString(1, email);
+
+			ResultSet rs = statement.executeQuery();
+
+			boolean success = false;
+			if (rs.next()) {
+				String encryptedPassword = rs.getString("password");
+				success = new StrongPasswordEncryptor().checkPassword(password, encryptedPassword);
+			}
+
+			rs.close();
+			statement.close();
+
+			System.out.println("verify " + email + " - " + password);
+			System.out.println("success? " + success);
+			return success;
 		}
-		else if (type.equals("employee")) {
-			query = "SELECT * from employees where email= ?";
-		}
-		statement = connection.prepareStatement(query);
-		statement.setString(1, email);
-
-		ResultSet rs = statement.executeQuery();
-
-		boolean success = false;
-		if (rs.next()) {
-		    // get the encrypted password from the database
-			String encryptedPassword = rs.getString("password");
-			
-			// use the same encryptor to compare the user input password with encrypted password stored in DB
-			success = new StrongPasswordEncryptor().checkPassword(password, encryptedPassword);
-		}
-
-		rs.close();
-		statement.close();
-		connection.close();
-		
-		System.out.println("verify " + email + " - " + password);
-		System.out.println(success);
-		return success;
 	}
 
 }
