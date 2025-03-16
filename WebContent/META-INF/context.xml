@@ -11,7 +11,7 @@
           maxWaitMillis = "10000"
           username="mytestuser"
           password="My6$Password"
-          url="jdbc:mysql://host.docker.internal:3306/moviedb?autoReconnect=true&amp;allowPublicKeyRetrieval=true&amp;useSSL=false&amp;cachePrepStmts=true"/>
+          url="jdbc:mysql://mysql-primary:3306/moviedb?autoReconnect=true&amp;allowPublicKeyRetrieval=true&amp;useSSL=false&amp;cachePrepStmts=true"/>
 
 <Resource name="jdbc/ReadOnly"
           auth="Container"
@@ -23,6 +23,6 @@
           maxWaitMillis = "10000"
           username="mytestuser"
           password="My6$Password"
-          url="jdbc:mysql://host.docker.internal:3306/moviedb?autoReconnect=true&amp;allowPublicKeyRetrieval=true&amp;useSSL=false&amp;cachePrepStmts=true"/>
+          url="jdbc:mysql://mysql-secondary:3306/moviedb?autoReconnect=true&amp;allowPublicKeyRetrieval=true&amp;useSSL=false&amp;cachePrepStmts=true"/>
 
 </Context>
