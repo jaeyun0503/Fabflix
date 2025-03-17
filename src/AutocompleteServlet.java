@@ -48,7 +48,7 @@ public class AutocompleteServlet extends HttpServlet {
             String title = request.getParameter("query") != null ?
                     request.getParameter("query") : "";
 
-            String query = "SELECT id, title FROM movies WHERE match(title) against (? IN BOOLEAN MODE) OR ed(lower(title), ?) <= ? LIMIT 10";
+            String query = "SELECT id, title FROM movies WHERE match(title) against (? IN BOOLEAN MODE) LIMIT 10";
 
             PreparedStatement statement = connection.prepareStatement(query);
             String new_title = "";
@@ -61,17 +61,6 @@ public class AutocompleteServlet extends HttpServlet {
                 }
             }
             statement.setString(1, new_title);
-            statement.setString(2, title.toLowerCase());
-
-            int length = title.length();
-            if (length < 4) {
-                statement.setInt(3, 1);
-            } else if (length < 7) {
-                statement.setInt(3, 2);
-            }
-            else {
-                statement.setInt(3, 3);
-            }
 
             System.out.println("autocomplete query: " + statement.toString());
 
