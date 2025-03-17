@@ -64,8 +64,6 @@ public class PurchaseServlet extends HttpServlet {
             }
             HttpSession session = request.getSession();
             Cart cart = (Cart) session.getAttribute("shoppingCart");
-            User user = (User) session.getAttribute("user");
-            System.out.println(user.getId());
             if (cart == null || cart.getItems().isEmpty()) {
                 request.setAttribute("errorMessage", "Your shopping cart is empty.");
                 request.getRequestDispatcher("payment.html").forward(request, response);
@@ -75,7 +73,7 @@ public class PurchaseServlet extends HttpServlet {
             String saleItemInsert = "INSERT INTO sales (customerId, movieId, saleDate, quantity) VALUES (?, ?, ?, ?)";
             PreparedStatement temp = conn.prepareStatement(saleItemInsert);
             for (Item item : cart.getItems()) {
-                temp.setInt(1, user.getId());
+                temp.setInt(1, 48001);
                 temp.setString(2, item.getMovieId());
                 temp.setDate(3, Date.valueOf(java.time.LocalDate.now()));
                 temp.setInt(4, item.getQuantity());

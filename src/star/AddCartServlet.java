@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 // Declaring a WebServlet called star.AddCartServlet, which maps to url "/api/addcart"
-@WebServlet(name = "star.AddCartServlet", urlPatterns = "/api/addcart")
+@WebServlet(name = "AddCartServlet", urlPatterns = "/api/addcart")
 public class AddCartServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 

@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "login.FormRecaptcha", urlPatterns = "/form-recaptcha")
+@WebServlet(name = "FormRecaptcha", urlPatterns = "/form-recaptcha")
 public class FormRecaptcha extends HttpServlet {
     private static final long serialVersionUID = 1L;
 

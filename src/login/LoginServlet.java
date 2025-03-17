@@ -1,7 +1,8 @@
 package login;
 
 import com.google.gson.JsonObject;
-import star.User;
+import common.JwtUtil;
+import common.User;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,8 +15,13 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-@WebServlet(name = "login.LoginServlet", urlPatterns = "/api/login")
+@WebServlet(name = "LoginServlet", urlPatterns = "/api/login")
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private DataSource dataSource;
@@ -46,10 +52,21 @@ public class LoginServlet extends HttpServlet {
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 if (VerifyPassword.validPassword(username, password, "customer")) {
-                    User user = new User(username);
-                    String id = rs.getString("id");
-                    user.setId(Integer.parseInt(id));
-                    request.getSession().setAttribute("user", user);
+//                    User user = new User(username);
+//                    String id = rs.getString("id");
+//                    user.setId(Integer.parseInt(id));
+//                    request.getSession().setAttribute("user", user);
+                    String subject = username;
+
+                    // store user login time in JWT
+                    Map<String, Object> claims = new HashMap<>();
+
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                    claims.put("loginTime", dateFormat.format(new Date()));
+
+                    // Generate new JWT and add it to Header
+                    String token = JwtUtil.generateToken(subject, claims);
+                    JwtUtil.updateJwtCookie(request, response, token);
                     responseJsonObject.addProperty("status", "success");
                     responseJsonObject.addProperty("message", "success");
                 } else {

@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet(name = "star.MetadataServlet", urlPatterns = "/api/metadata")
+@WebServlet(name = "MetadataServlet", urlPatterns = "/api/metadata")
 public class MetadataServlet extends HttpServlet {
     private static final long serialVersionUID = 2L;
 

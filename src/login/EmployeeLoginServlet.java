@@ -19,7 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 
-@WebServlet(name = "login.EmployeeLoginServlet", urlPatterns = {"/api/dashboard_login", "/_dashboard"})
+@WebServlet(name = "EmployeeLoginServlet", urlPatterns = {"/api/dashboard_login", "/_dashboard"})
 public class EmployeeLoginServlet extends HttpServlet {
     private static final long serialVersionUID = 5L;
 

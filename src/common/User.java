@@ -1,4 +1,4 @@
-package star;
+package common;
 
 public class User {
 
