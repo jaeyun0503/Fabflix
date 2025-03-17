@@ -1,3 +1,4 @@
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -17,9 +18,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 
-// Declaring a WebServlet called MovieListServlet, which maps to url "/api/movielist"
+// Declaring a WebServlet called star.MovieListServlet, which maps to url "/api/movielist"
 @WebServlet(name = "MovieListServlet", urlPatterns = "/api/movielist")
 public class MovieListServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -158,22 +158,15 @@ public class MovieListServlet extends HttpServlet {
                             "WHERE true ");   // Set to 0 if rating is null
 
             String temp = "";
-            int k = title.length() < 3 ? 0 : title.length() < 4 ? 1 : title.length() < 7 ? 2 : 3;
             if (title != null && !title.trim().isEmpty()) {
                 String [] tokens = title.split(" ");
                 for (String word : tokens) {
                     temp += "+" + word + "* ";
                 }
-                query.append(" AND (MATCH (m.title) AGAINST (? IN BOOLEAN MODE) ");
-                query.append("OR ed(lower(title), '").append(title.toLowerCase()).append("') <= ");
-                query.append(k);
-                query.append(") ");
+                query.append(" AND (MATCH (m.title) AGAINST (? IN BOOLEAN MODE)) ");
             } else {
                 temp = "%";
-                query.append(" AND (m.title LIKE ? OR ed(lower(title), '");
-                query.append(title.toLowerCase()).append("') <= ");
-                query.append(k);
-                query.append(") ");
+                query.append(" AND (m.title LIKE ?) ");
             }
 
             if (year != null && !year.trim().isEmpty()) {
