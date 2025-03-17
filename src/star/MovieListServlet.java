@@ -1,5 +1,4 @@
 package star;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -165,10 +164,10 @@ public class MovieListServlet extends HttpServlet {
                 for (String word : tokens) {
                     temp += "+" + word + "* ";
                 }
-                query.append(" AND (MATCH (m.title) AGAINST (? IN BOOLEAN MODE) ");
+                query.append(" AND (MATCH (m.title) AGAINST (? IN BOOLEAN MODE)) ");
             } else {
                 temp = "%";
-                query.append(" AND (m.title LIKE ? ");
+                query.append(" AND (m.title LIKE ?) ");
             }
 
             if (year != null && !year.trim().isEmpty()) {
