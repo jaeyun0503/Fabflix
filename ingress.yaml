@@ -1,22 +1,37 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  annotations:
-    kubernetes.io/ingress.class: nginx # Specifies that this Ingress resource should be handled by the nginx Ingress controller.
-    nginx.ingress.kubernetes.io/affinity: "cookie" # # Enables session affinity based on cookies, ensuring requests from the same client are routed to the same backend.
-    nginx.ingress.kubernetes.io/session-cookie-name: "stickounet" # Sets the name of the session cookie used for maintaining session affinity.
-    nginx.ingress.kubernetes.io/session-cookie-expires: "172800" # Specifies the expiration time of the session cookie in seconds (172800 seconds = 2 days).
-    nginx.ingress.kubernetes.io/session-cookie-max-age: "172800" # Sets the maximum age of the session cookie in seconds, aligning with the expiration time.
-  name: fablix-ingress # Names this Ingress resource as "murphy-movies-ingress".
+  name: fablix-ingress
   namespace: default
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"            # Enables regex matching for paths
+    nginx.ingress.kubernetes.io/affinity: "cookie"           # Enables session affinity (sticky sessions)
+    nginx.ingress.kubernetes.io/session-cookie-name: "stickounet"  # Defines the name of the session cookie
+    nginx.ingress.kubernetes.io/session-cookie-expires: "172800"   # Session cookie expires in 2 days
+    nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"   #
 spec:
+  ingressClassName: nginx                     # Use 'nginx' as the Ingress controller
   rules:
     - http:
         paths:
-          - backend:
+          - path: /cs122b-winter25-jan/api/login
+            pathType: Prefix                  # Requests beginning with '/api/login' go here
+            backend:
               service:
-                name: fablix-service # Points to the service named "murphy-movies-service". The value should match the name of the service.
+                name: fablix-login-service    # Name of the Service receiving traffic
                 port:
-                  number: 8080 # Specifies that the service is listening on port 8080.
-            path: / # # Defines the path to match incoming requests. Here, "/" means the root path.
-            pathType: Prefix # # Indicates that the path is a prefix match, so any request path starting with "/" will be routed to the backend service.
+                  number: 8080                # Service port to forward traffic to
+          - path: /cs122b-winter25-jan/login.*
+            pathType: ImplementationSpecific   # Implementation-specific path matching for regex
+            backend:
+              service:
+                name: fablix-login-service
+                port:
+                  number: 8080
+          - path: /
+            pathType: Prefix                  # All other requests matching '/' go here
+            backend:
+              service:
+                name: fablix-star-service     # Name of the Service receiving traffic
+                port:
+                  number: 8080
