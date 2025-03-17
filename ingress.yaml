@@ -14,14 +14,14 @@ spec:
   rules:
     - http:
         paths:
-          - path: /cs122b-winter25-jan/api/login
+          - path: /Fablix/api/login
             pathType: Prefix                  # Requests beginning with '/api/login' go here
             backend:
               service:
                 name: fablix-login-service    # Name of the Service receiving traffic
                 port:
                   number: 8080                # Service port to forward traffic to
-          - path: /cs122b-winter25-jan/login.*
+          - path: /Fablix/login.*
             pathType: ImplementationSpecific   # Implementation-specific path matching for regex
             backend:
               service:
