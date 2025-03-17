@@ -4,6 +4,7 @@
 FROM maven:3.8.5-openjdk-11-slim AS builder
 
 # create and `cd` into a folder called "app" inside the virtual machine
+ARG MVN_PROFILE="default"
 WORKDIR /app
 
 # copy everything in the current folder into the "app" folder. (src/ WebContent/ etc)

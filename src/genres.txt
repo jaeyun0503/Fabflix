@@ -1,0 +1,37 @@
+24|Avant Garde
+25|Biographical Picture
+26|Cult
+27|Action Drama
+28|Muscl
+29|Epic
+30|Surreal
+31|Scat
+32|Disaster
+33|Cartoon
+34|Allegory
+35|Romantic Comedy
+36|Drama Documentary
+37|Comdx
+38|Cops and Robbers
+39|Tv Miniseries
+40|Romantic Drama
+41|Camp
+42|Black Comedy
+43|Black
+44|Pornography
+45|Tv Show
+46|Biographical
+47|Art Video
+48|Romantic Action
+49|Muscl 
+50|Violence
+51|Uncategorized
+52|Black Romantic Comedy
+53|Romantic Fantasy
+54|Romantic Adventure
+55|Psychological
+56|Cinéma Vérité
+57|Dist
+58|Psychological Drama
+59|Stage Musical
+60|Kinky
