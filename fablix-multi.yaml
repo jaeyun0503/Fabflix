@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fablix-star
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fablix-star
+  template:
+    metadata:
+      labels:
+        app: fablix-star
+    spec:
+      containers:
+        - name: fablix-star-container
+          image: jaeyun0503/cs122b-winter25-jan-star:v1
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+      imagePullSecrets: # Specifies the secret to use for pulling the image (not needed for public images)
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fablix-star-service
+spec:
+  selector:
+    app: fablix-star
+  ports:
+    - name: http
+      port: 8080
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fablix-login
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fablix-login
+  template:
+    metadata:
+      labels:
+        app: fablix-login
+    spec:
+      containers:
+        - name: fablix-login-container
+          image: jaeyun0503/cs122b-winter25-jan-login:v1
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fablix-login-service
+spec:
+  selector:
+    app: fablix-login
+  ports:
+    - name: http
+      port: 8080
+  type: ClusterIP

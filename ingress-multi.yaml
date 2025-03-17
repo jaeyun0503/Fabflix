@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fablix-ingress
+  namespace: default
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"            # Enables regex matching for paths
+    nginx.ingress.kubernetes.io/affinity: "cookie"           # Enables session affinity (sticky sessions)
+    nginx.ingress.kubernetes.io/session-cookie-name: "stickounet"  # Defines the name of the session cookie
+    nginx.ingress.kubernetes.io/session-cookie-expires: "172800"   # Session cookie expires in 2 days
+    nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"   #
+spec:
+  ingressClassName: nginx                     # Use 'nginx' as the Ingress controller
+  rules:
+    - http:
+        paths:
+          - path: /Fablix/api/login
+            pathType: Prefix                  # Requests beginning with '/api/login' go here
+            backend:
+              service:
+                name: fablix-login-service    # Name of the Service receiving traffic
+                port:
+                  number: 8080                # Service port to forward traffic to
+          - path: /Fablix/login.*
+            pathType: ImplementationSpecific   # Implementation-specific path matching for regex
+            backend:
+              service:
+                name: fablix-login-service
+                port:
+                  number: 8080
+          - path: /
+            pathType: Prefix                  # All other requests matching '/' go here
+            backend:
+              service:
+                name: fablix-star-service     # Name of the Service receiving traffic
+                port:
+                  number: 8080
