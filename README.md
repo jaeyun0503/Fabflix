@@ -1,15 +1,4 @@
-## CS 122B Project 5
+## Fabflix
 
-Jae Yun Kim
+A Movie-catalog website that allows users to view & buy movies from all genres and countries
 
-Link: https://youtu.be/KiRrGqoYwtw
-
-Services that are created:
-- Login -- All apis related to login are hosted by this service, which is: /Fablix/login.*
-- Star -- Everything except for Login. which is just /Fablix/
-
-Four yaml files:
-- fablix.yaml
-- fablix-multi.yaml
-- ingress.yaml
-- ingress-multi.yaml
